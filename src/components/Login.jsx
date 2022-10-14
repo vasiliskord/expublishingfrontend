@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 function Login() {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
 
-  const { email, password } = formData;
+  const { username, password } = formData;
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.user
@@ -33,10 +33,10 @@ function Login() {
             style={{ display: "flex", flexDirection: "column" }}
           >
             <Input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={email}
+              type="username"
+              name="username"
+              placeholder="Username"
+              value={username}
               onChange={handleChange}
               border="2px solid"
               borderColor="pink"
@@ -51,7 +51,6 @@ function Login() {
               onChange={handleChange}
               border="2px solid"
               borderColor="pink"
-
               p="5"
               mb="5"
             />
