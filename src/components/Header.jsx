@@ -9,15 +9,6 @@ function Header() {
   const dispatch = useDispatch();
   const { user, isLoading } = useSelector((state) => state.user);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    dispatch(reset());
-    navigate("/");
-  };
-
-  const handleLogin = () => {
-    navigate("/");
-  };
 
   if (isLoading) {
     return <Spinner />;
@@ -27,7 +18,7 @@ function Header() {
     <>
       <Box
         w="100%"
-        h="50px"
+        h="5vh"
         bgColor="pink"
         display="flex"
         justifyContent="space-between"
