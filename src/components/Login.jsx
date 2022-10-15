@@ -2,12 +2,14 @@ import { background, Box, Center, Button, Input } from "@chakra-ui/react";
 import { login, reset } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
 
   const { username, password } = formData;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.user
   );
@@ -19,10 +21,16 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(login(formData));
+  const handleSubmit = () => {
+    const userData = { username, password };
+    dispatch(login(userData));
   };
+
+  useEffect(() => {
+    if (isSuccess||user) {
+      navigate("/cat");
+    }
+  }, [ isSuccess,user]);
 
   return (
     <Center w="100%" h="100vh" bgColor="blue.100">
