@@ -1,7 +1,7 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import likeService from './likeService';
  
-
+const like = JSON.parse(localStorage.getItem('like'));
 
 const initialState = {
     likes: [],
@@ -28,27 +28,15 @@ export const likeCatImage = createAsyncThunk(
 
 export const unlikeCatImage = createAsyncThunk(
     'like/unlikeCatImage',
-    async (catImageId, thunkAPI) => {
+    async (catData, thunkAPI) => {
         try {
-            return await likeService.unlikeCatImage(catImageId);
+            return await likeService.unlikeCatImage(catData);
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response.data);
         }
     }
 );
 
-//get all liked cat images
-
-export const getLikedCatImages = createAsyncThunk(
-    'like/getLikedCatImages',
-    async (thunkAPI) => {
-        try {
-            return await likeService.getLikedCatImages();
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.response.data);
-        }
-    }
-);
 
 
 export const likeSlice = createSlice({
@@ -84,26 +72,14 @@ export const likeSlice = createSlice({
             .addCase(unlikeCatImage.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.likes = state.likes.filter(like => like !== action.payload);
+                state.likes = state.likes.filter((like) => like.id !== action.payload);
             })
             .addCase(unlikeCatImage.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload.message;
             })
-            .addCase(getLikedCatImages.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(getLikedCatImages.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isSuccess = true;
-                state.likes = action.payload;
-            })
-            .addCase(getLikedCatImages.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.message = action.payload.message;
-            });
+
     }
 });
 

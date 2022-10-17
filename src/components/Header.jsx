@@ -34,6 +34,15 @@ function Header() {
         >
           Cat
         </Box>
+        <Box
+          as="button"
+          onClick={() => navigate("/favourites")}
+          fontSize="xl"
+          fontWeight="bold"
+          color="white"
+        >
+          Favourite
+        </Box>
         {user ? (
           <Box as="button" fontSize="xl" fontWeight="bold" color="white">
             <Link

@@ -1,25 +1,33 @@
-import { Box, Center, Image, Button, IconButton } from "@chakra-ui/react";
+import { Box, Center, Image, Button, IconButton, Text } from "@chakra-ui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import CatImage from "../components/CatImage";
 import { getCatImages, reset } from "../features/cats/catSlice";
-import { FcLike } from "react-icons/fc";
-import { likeCatImage } from "../features/like/likeSlice";
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
+import { likeCatImage, unlikeCatImage } from "../features/like/likeSlice";
 
 const CatPage = () => {
   const { catImages, isError, isLoading, isSuccess, message } = useSelector(
     (state) => state.cat
   );
-  const {likes} = useSelector((state) => state.like);
+  const [likeActive, setLikeActive] = useState(false);
+
+  const { likes } = useSelector((state) => state.like);
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.user);
 
   const onLikeClick = (catData) => {
+    setLikeActive(!likeActive);
     dispatch(likeCatImage(catData));
-    console.log(catData);
   };
 
+  const onUnlikeClick = (catData) => {
+    setLikeActive(!likeActive);
+    dispatch(unlikeCatImage(catData));
+  };
+
+  console.log(likeActive);
   useEffect(() => {
     dispatch(getCatImages());
   }, [dispatch]);
@@ -41,14 +49,22 @@ const CatPage = () => {
                     <Box border="1px solid pink">
                       <CatImage key={catImage.id} cat={catImage} />
                     </Box>
-                    <Center marginTop="5px"  >
-                      <IconButton
-                        variant=""
-                        aria-label="Like"
-                        fontSize="20px"
-                        icon={<FcLike />}
-                        onClick={() => onLikeClick(catImage)}
-                      />
+                    <Center marginTop="5px">
+                      {likes.find((like) => like.id === catImage.id) ? (
+                        <IconButton
+                          variant=""
+                          aria-label="like"
+                          icon={<FcLike />}
+                          onClick={() => onUnlikeClick(catImage)}
+                        />
+                      ) : (
+                        <IconButton
+                          variant=""
+                          aria-label="like"
+                          icon={<FcLikePlaceholder />}
+                          onClick={() => onLikeClick(catImage)}
+                        />
+                      )}
                     </Center>
                   </Box>
                 </>
@@ -56,9 +72,9 @@ const CatPage = () => {
             </Center>
           </Box>
         ) : (
-          <Box>
-            <Center>You need to login to see this page</Center>
-          </Box>
+          <Center paddingTop="50px">
+            <Text fontSize="xl">You need to login to see this page</Text>
+          </Center>
         )}
       </Box>
     </>
